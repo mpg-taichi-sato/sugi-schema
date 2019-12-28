@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  go:
+    build: docker/pb/go
+    volumes:
+      - .:/usr/src/app
+    tty: true
+    working_dir: /usr/src/app/pb
+    command: bash

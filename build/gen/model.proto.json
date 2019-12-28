@@ -1,0 +1,38 @@
+{
+   "filename": "model.proto",
+   "protofile": {
+      "Dependency": null,
+      "messages": [
+         {
+            "fields": [
+               {
+                  "name": "tasks",
+                  "repeated": true,
+                  "type": 11,
+                  "typename": ".model.Task"
+               }
+            ],
+            "name": "TodoListResponse"
+         },
+         {
+            "fields": [
+               {
+                  "name": "ID",
+                  "repeated": false,
+                  "type": 9,
+                  "typename": ""
+               },
+               {
+                  "name": "Name",
+                  "repeated": false,
+                  "type": 9,
+                  "typename": ""
+               }
+            ],
+            "name": "Task"
+         }
+      ],
+      "name": "model.proto",
+      "package": "model"
+   }
+}

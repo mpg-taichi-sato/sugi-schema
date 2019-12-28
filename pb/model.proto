@@ -1,0 +1,14 @@
+syntax = "proto3";
+package model;
+
+import "google/protobuf/timestamp.proto";
+
+message TodoListResponse {
+    repeated Task tasks = 1;
+}
+
+message Task {
+    string ID = 1;
+    string Name = 2;
+    google.protobuf.Timestamp CreatedAt = 3;
+}
