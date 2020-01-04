@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb.option;
+option go_package = "option";
+import "google/protobuf/descriptor.proto";
+
+message Http {
+    string method = 1;
+    string path = 2;
+}
+
+extend google.protobuf.MethodOptions {
+    Http http = 50000;
+}

@@ -1,12 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"protoc-gen-model/generator"
+	"protoc-gen-model/option"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
@@ -27,41 +29,6 @@ func parseReq(r io.Reader) (*plugin.CodeGeneratorRequest, error) {
 	return &req, nil
 }
 
-// func processReq(req *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorResponse {
-// 	files := make(map[string]*descriptor.FileDescriptorProto)
-// 	for _, f := range req.ProtoFile {
-// 		files[f.GetName()] = f
-// 	}
-
-// 	var resp plugin.CodeGeneratorResponse
-// 	for _, fname := range req.FileToGenerate {
-
-// 		f := files[fname]
-// 		messageProtos := f.GetMessageType()
-// 		messages := make([]map[string]interface{}, 0, len(messageProtos))
-// 		for i := 0; i < len(messageProtos); i++ {
-// 			messages = append(messages, GetMessage(messageProtos[i]))
-// 		}
-// 		dataMap := map[string]interface{}{
-// 			"filename": fname,
-// 			"protofile": map[string]interface{}{
-// 				"name":       f.GetName(),
-// 				"package":    f.GetPackage(),
-// 				"Dependency": f.GetDependency(),
-// 				"messages":   messages,
-// 			},
-// 		}
-// 		i, _ := json.MarshalIndent(dataMap, "", "   ")
-// 		dataJSON := string(i)
-// 		out := fname + ".json"
-// 		resp.File = append(resp.File, &plugin.CodeGeneratorResponse_File{
-// 			Name:    proto.String(out),
-// 			Content: proto.String(dataJSON),
-// 		})
-// 	}
-// 	return &resp
-// }
-
 func processReq(req *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorResponse {
 	files := make(map[string]*descriptor.FileDescriptorProto)
 	for _, f := range req.ProtoFile {
@@ -70,26 +37,112 @@ func processReq(req *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorResponse 
 
 	var resp plugin.CodeGeneratorResponse
 	for _, fname := range req.FileToGenerate {
+
 		f := files[fname]
-
 		messageProtos := f.GetMessageType()
-		structValues := make([]*generator.StructValue, 0, len(messageProtos))
+		messages := make([]map[string]interface{}, 0, len(messageProtos))
 		for i := 0; i < len(messageProtos); i++ {
-			structValues = append(structValues, GetGoStructValue(messageProtos[i]))
+			messages = append(messages, GetMessage(messageProtos[i]))
 		}
 
-		goFile := &generator.File{
-			PackageName:  f.GetPackage(), // TODO packageが階層だったときの処理
-			StructValues: structValues,
+		serviceProtos := f.GetService()
+		services := make([]map[string]interface{}, 0, len(serviceProtos))
+		for i := 0; i < len(serviceProtos); i++ {
+			services = append(services, GetService(serviceProtos[i]))
 		}
-		content := generator.GenerateGoCode(goFile)
-		out := strings.Replace(fname, ".proto", ".pb.go", 1)
+
+		dataMap := map[string]interface{}{
+			"filename": fname,
+			"protofile": map[string]interface{}{
+				"name":           f.GetName(),
+				"package":        f.GetPackage(),
+				"Dependency":     f.GetDependency(),
+				"messages":       messages,
+				"services":       services,
+				"sourceCodeInfo": f.GetSourceCodeInfo(),
+			},
+		}
+		i, _ := json.MarshalIndent(dataMap, "", "   ")
+		dataJSON := string(i)
+		out := fname + ".json"
 		resp.File = append(resp.File, &plugin.CodeGeneratorResponse_File{
 			Name:    proto.String(out),
-			Content: proto.String(content),
+			Content: proto.String(dataJSON),
 		})
 	}
 	return &resp
+}
+
+// func processReq(req *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorResponse {
+// 	files := make(map[string]*descriptor.FileDescriptorProto)
+// 	for _, f := range req.ProtoFile {
+// 		files[f.GetName()] = f
+// 	}
+
+// 	var resp plugin.CodeGeneratorResponse
+// 	for _, fname := range req.FileToGenerate {
+// 		f := files[fname]
+
+// 		messageProtos := f.GetMessageType()
+// 		structValues := make([]*generator.StructValue, 0, len(messageProtos))
+// 		for i := 0; i < len(messageProtos); i++ {
+// 			structValues = append(structValues, GetGoStructValue(messageProtos[i]))
+// 		}
+
+// 		goFile := &generator.File{
+// 			PackageName:  f.GetPackage(), // TODO packageが階層だったときの処理
+// 			StructValues: structValues,
+// 		}
+// 		content := generator.GenerateGoCode(goFile)
+// 		out := strings.Replace(fname, ".proto", ".pb.go", 1)
+// 		resp.File = append(resp.File, &plugin.CodeGeneratorResponse_File{
+// 			Name:    proto.String(out),
+// 			Content: proto.String(content),
+// 		})
+// 	}
+// 	return &resp
+// }
+
+func GetService(serviceProto *descriptor.ServiceDescriptorProto) map[string]interface{} {
+	// Request
+	// Response
+	// path
+	// method
+
+	methodProtos := serviceProto.GetMethod()
+	methods := make([]map[string]interface{}, 0, len(methodProtos))
+	for i := 0; i < len(methodProtos); i++ {
+		methodProto := methodProtos[i]
+		methodOptions := methodProto.GetOptions()
+		apiOption := GetAPIOption(methodOptions)
+		methods = append(methods, map[string]interface{}{
+			"name":       methodProto.GetName(),
+			"InputType":  methodProto.GetInputType(),
+			"OutputType": methodProto.GetOutputType(),
+			"method":     apiOption.GetMethod(),
+			"path":       apiOption.GetPath(),
+		})
+	}
+	service := map[string]interface{}{
+		"name":   serviceProto.GetName(),
+		"method": methods,
+	}
+	return service
+}
+
+func GetAPIOption(options *descriptor.MethodOptions) *option.Http {
+	if options == nil {
+		return nil
+	}
+	ext, err := proto.GetExtension(options, option.E_Http)
+	if err == proto.ErrMissingExtension {
+		panic(err)
+	}
+	if err != nil {
+		panic(err)
+	}
+	apiOption := ext.(*option.Http)
+	return apiOption
 }
 
 func GetMessage(messageProto *descriptor.DescriptorProto) map[string]interface{} {

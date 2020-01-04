@@ -1,14 +1,15 @@
 syntax = "proto3";
-package model;
+package pb.model;
 
 import "google/protobuf/timestamp.proto";
 
 message TodoListResponse {
-    repeated Task tasks = 1;
+    repeated Task tasks = 1; // this is tasks
+    map<int32, string> sampleMap = 2; // mapはrepeatedできない
 }
 
 message Task {
     string ID = 1;
-    string Name = 2;
+    string Name = 2; // task name
     google.protobuf.Timestamp CreatedAt = 3;
 }
