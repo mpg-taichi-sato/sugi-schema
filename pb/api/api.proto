@@ -4,11 +4,33 @@ package pb.api;
 import "model.proto";
 import "option/http.proto";
 
+// Serviceのコメント
 service SampleService {
+    
+    // サンプルで作った関数
     rpc SampleRPC(pb.model.Task) returns (pb.model.TodoListResponse){
         option (pb.option.http) = {
             method: "GET"
             path: "v1/samplerpc"
+        };
+    }
+
+    // サンプルで作った関数3
+    rpc SampleRPC3(pb.model.Task) returns (pb.model.TodoListResponse){
+        option (pb.option.http) = {
+            method: "GET"
+            path: "v1/samplerpc3"
+        };
+    }
+    // rpc SampleRPC(pb.model.Task) returns (pb.option.Http);
+}
+
+service SampleService2 {
+    // サンプルで作った関数2222
+    rpc SampleRPC2(pb.model.Task) returns (pb.model.TodoListResponse){
+        option (pb.option.http) = {
+            method: "GET"
+            path: "v1/samplerpc2"
         };
     }
     // rpc SampleRPC(pb.model.Task) returns (pb.option.Http);

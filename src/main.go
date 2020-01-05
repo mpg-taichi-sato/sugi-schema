@@ -16,6 +16,101 @@ import (
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
+// ProtoFileInfo pathを意識せずに使えるようにする
+type ProtoFileInfo struct {
+	sourceCodeInfoLocations []*descriptor.SourceCodeInfo_Location
+}
+
+func CreateProtoFileInfo(fileDescriptorProto *descriptor.FileDescriptorProto) *ProtoFileInfo {
+	sourceCodeInfo := fileDescriptorProto.GetSourceCodeInfo()
+	sourceCodeInfoLocations := sourceCodeInfo.GetLocation() // ロケーションの配列
+	return &ProtoFileInfo{
+		sourceCodeInfoLocations: sourceCodeInfoLocations,
+	}
+}
+
+func (info *ProtoFileInfo) GetMethodInfo(serviceIndex, methodIndex int32) *descriptor.SourceCodeInfo_Location {
+
+	for i := range info.sourceCodeInfoLocations {
+		loc := info.sourceCodeInfoLocations[i]
+		path := loc.Path
+		if len(path) != 4 {
+			continue
+		}
+
+		// field service: 6 method 2
+		if path[0] != 6 || path[1] != serviceIndex || path[2] != 2 || path[3] != methodIndex {
+			continue
+		}
+
+		return loc
+
+		// comment := ""
+		// if sourceCodeInfoLocation.LeadingComments != nil {
+		// 	leadingComments := sourceCodeInfoLocation.GetLeadingComments()
+		// 	return leadingComments
+		// }
+	}
+	return nil
+}
+
+func (info *ProtoFileInfo) GetServiceInfo(serviceIndex int32) *descriptor.SourceCodeInfo_Location {
+
+	for i := range info.sourceCodeInfoLocations {
+		loc := info.sourceCodeInfoLocations[i]
+		path := loc.Path
+		if len(path) != 2 {
+			continue
+		}
+
+		// field service: 6
+		if path[0] != 6 || path[1] != serviceIndex {
+			continue
+		}
+
+		return loc
+	}
+	return nil
+}
+
+func (info *ProtoFileInfo) GetMessageInfo(messageIndex int32) *descriptor.SourceCodeInfo_Location {
+
+	for i := range info.sourceCodeInfoLocations {
+		loc := info.sourceCodeInfoLocations[i]
+		path := loc.Path
+		if len(path) != 2 {
+			continue
+		}
+
+		// field message: 4
+		if path[0] != 4 || path[1] != messageIndex {
+			continue
+		}
+
+		return loc
+	}
+	return nil
+}
+
+func (info *ProtoFileInfo) GetMessageFieldInfo(messageIndex, fieldIndex int32) *descriptor.SourceCodeInfo_Location {
+
+	for i := range info.sourceCodeInfoLocations {
+		loc := info.sourceCodeInfoLocations[i]
+		path := loc.Path
+		if len(path) != 4 {
+			continue
+		}
+
+		// field message: 4 field: 2
+		if path[0] != 4 || path[1] != messageIndex || path[2] != 2 || path[3] != fieldIndex {
+			continue
+		}
+
+		return loc
+	}
+	return nil
+}
+
 func parseReq(r io.Reader) (*plugin.CodeGeneratorRequest, error) {
 	buf, err := ioutil.ReadAll(r)
 	if err != nil {
@@ -36,30 +131,32 @@ func processReq(req *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorResponse 
 	}
 
 	var resp plugin.CodeGeneratorResponse
+
 	for _, fname := range req.FileToGenerate {
 
 		f := files[fname]
+		protoFileInfo := CreateProtoFileInfo(f)
 		messageProtos := f.GetMessageType()
 		messages := make([]map[string]interface{}, 0, len(messageProtos))
 		for i := 0; i < len(messageProtos); i++ {
-			messages = append(messages, GetMessage(messageProtos[i]))
+			messages = append(messages, GetMessage(messageProtos[i], i, protoFileInfo))
 		}
 
 		serviceProtos := f.GetService()
 		services := make([]map[string]interface{}, 0, len(serviceProtos))
 		for i := 0; i < len(serviceProtos); i++ {
-			services = append(services, GetService(serviceProtos[i]))
+			services = append(services, GetService(serviceProtos[i], i, protoFileInfo))
 		}
 
 		dataMap := map[string]interface{}{
 			"filename": fname,
 			"protofile": map[string]interface{}{
-				"name":           f.GetName(),
-				"package":        f.GetPackage(),
-				"Dependency":     f.GetDependency(),
-				"messages":       messages,
-				"services":       services,
-				"sourceCodeInfo": f.GetSourceCodeInfo(),
+				"name":       f.GetName(),
+				"package":    f.GetPackage(),
+				"Dependency": f.GetDependency(),
+				"messages":   messages,
+				"services":   services,
+				// "sourceCodeInfo": f.GetSourceCodeInfo(),
 			},
 		}
 		i, _ := json.MarshalIndent(dataMap, "", "   ")
@@ -103,11 +200,13 @@ func processReq(req *plugin.CodeGeneratorRequest) *plugin.CodeGeneratorResponse 
 // 	return &resp
 // }
 
-func GetService(serviceProto *descriptor.ServiceDescriptorProto) map[string]interface{} {
+func GetService(serviceProto *descriptor.ServiceDescriptorProto, serviceIndex int, protoFileInfo *ProtoFileInfo) map[string]interface{} {
 	// Request
 	// Response
 	// path
 	// method
+
+	serviceInfo := protoFileInfo.GetServiceInfo(int32(serviceIndex))
 
 	methodProtos := serviceProto.GetMethod()
 	methods := make([]map[string]interface{}, 0, len(methodProtos))
@@ -115,17 +214,24 @@ func GetService(serviceProto *descriptor.ServiceDescriptorProto) map[string]inte
 		methodProto := methodProtos[i]
 		methodOptions := methodProto.GetOptions()
 		apiOption := GetAPIOption(methodOptions)
+		methodInfo := protoFileInfo.GetMethodInfo(int32(serviceIndex), int32(i))
 		methods = append(methods, map[string]interface{}{
-			"name":       methodProto.GetName(),
-			"InputType":  methodProto.GetInputType(),
-			"OutputType": methodProto.GetOutputType(),
-			"method":     apiOption.GetMethod(),
-			"path":       apiOption.GetPath(),
+			"name":                    methodProto.GetName(),
+			"InputType":               methodProto.GetInputType(),
+			"OutputType":              methodProto.GetOutputType(),
+			"method":                  apiOption.GetMethod(),
+			"path":                    apiOption.GetPath(),
+			"leadingComments":         methodInfo.GetLeadingComments(),
+			"trailingComments":        methodInfo.GetTrailingComments(),
+			"leadingDetachedComments": methodInfo.GetLeadingDetachedComments(),
 		})
 	}
 	service := map[string]interface{}{
-		"name":   serviceProto.GetName(),
-		"method": methods,
+		"name":                    serviceProto.GetName(),
+		"method":                  methods,
+		"leadingComments":         serviceInfo.GetLeadingComments(),
+		"trailingComments":        serviceInfo.GetTrailingComments(),
+		"leadingDetachedComments": serviceInfo.GetLeadingDetachedComments(),
 	}
 	return service
 }
@@ -145,14 +251,21 @@ func GetAPIOption(options *descriptor.MethodOptions) *option.Http {
 	return apiOption
 }
 
-func GetMessage(messageProto *descriptor.DescriptorProto) map[string]interface{} {
+func GetMessage(messageProto *descriptor.DescriptorProto, messageIndex int, protoFileInfo *ProtoFileInfo) map[string]interface{} {
+
+	messageInfo := protoFileInfo.GetMessageInfo(int32(messageIndex))
+
 	fieldProtos := messageProto.GetField()
 	fields := make([]map[string]interface{}, 0, len(fieldProtos))
 	for i := 0; i < len(fieldProtos); i++ {
-		fields = append(fields, GetField(fieldProtos[i]))
+		fieldInfo := protoFileInfo.GetMessageFieldInfo(int32(messageIndex), int32(i))
+		fields = append(fields, GetField(fieldProtos[i], fieldInfo))
 	}
 	message := map[string]interface{}{
-		"name": messageProto.GetName(),
+		"name":                    messageProto.GetName(),
+		"leadingComments":         messageInfo.GetLeadingComments(),
+		"trailingComments":        messageInfo.GetTrailingComments(),
+		"leadingDetachedComments": messageInfo.GetLeadingDetachedComments(),
 	}
 	if len(fields) != 0 {
 		message["fields"] = fields
@@ -224,13 +337,16 @@ func GetGoStructTypeName(typeName string) string {
 	return typeSlice[len(typeSlice)-1]
 }
 
-func GetField(fieldProto *descriptor.FieldDescriptorProto) map[string]interface{} {
+func GetField(fieldProto *descriptor.FieldDescriptorProto, info *descriptor.SourceCodeInfo_Location) map[string]interface{} {
 	label := fieldProto.GetLabel()
 	field := map[string]interface{}{
-		"name":     fieldProto.GetName(),
-		"type":     fieldProto.GetType(), // 11ならmessage
-		"typename": fieldProto.GetTypeName(),
-		"repeated": label == descriptor.FieldDescriptorProto_LABEL_REPEATED,
+		"name":                    fieldProto.GetName(),
+		"type":                    fieldProto.GetType(), // 11ならmessage
+		"typename":                fieldProto.GetTypeName(),
+		"repeated":                label == descriptor.FieldDescriptorProto_LABEL_REPEATED,
+		"leadingComments":         info.GetLeadingComments(),
+		"trailingComments":        info.GetTrailingComments(),
+		"leadingDetachedComments": info.GetLeadingDetachedComments(),
 	}
 
 	return field
