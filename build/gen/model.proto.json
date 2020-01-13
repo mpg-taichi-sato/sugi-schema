@@ -1,5 +1,545 @@
 {
+   "file": {
+      "name": "model.proto",
+      "package": "pb.model",
+      "dependency": [
+         "google/protobuf/timestamp.proto"
+      ],
+      "message_type": [
+         {
+            "name": "TodoListResponse",
+            "field": [
+               {
+                  "name": "tasks",
+                  "number": 1,
+                  "label": 3,
+                  "type": 11,
+                  "type_name": ".pb.model.Task",
+                  "json_name": "tasks"
+               },
+               {
+                  "name": "sampleMap",
+                  "number": 2,
+                  "label": 3,
+                  "type": 11,
+                  "type_name": ".pb.model.TodoListResponse.SampleMapEntry",
+                  "json_name": "sampleMap"
+               },
+               {
+                  "name": "task",
+                  "number": 3,
+                  "label": 1,
+                  "type": 11,
+                  "type_name": ".pb.model.Task",
+                  "json_name": "task"
+               }
+            ],
+            "nested_type": [
+               {
+                  "name": "SampleMapEntry",
+                  "field": [
+                     {
+                        "name": "key",
+                        "number": 1,
+                        "label": 1,
+                        "type": 5,
+                        "json_name": "key"
+                     },
+                     {
+                        "name": "value",
+                        "number": 2,
+                        "label": 1,
+                        "type": 11,
+                        "type_name": ".pb.model.Task",
+                        "json_name": "value"
+                     }
+                  ],
+                  "options": {
+                     "map_entry": true
+                  }
+               }
+            ]
+         },
+         {
+            "name": "Task",
+            "field": [
+               {
+                  "name": "ID",
+                  "number": 1,
+                  "label": 1,
+                  "type": 9,
+                  "json_name": "ID"
+               },
+               {
+                  "name": "Name",
+                  "number": 2,
+                  "label": 1,
+                  "type": 9,
+                  "json_name": "Name"
+               },
+               {
+                  "name": "CreatedAt",
+                  "number": 3,
+                  "label": 1,
+                  "type": 11,
+                  "type_name": ".google.protobuf.Timestamp",
+                  "json_name": "CreatedAt"
+               }
+            ]
+         }
+      ],
+      "source_code_info": {
+         "location": [
+            {
+               "span": [
+                  1,
+                  0,
+                  20,
+                  1
+               ]
+            },
+            {
+               "path": [
+                  12
+               ],
+               "span": [
+                  1,
+                  0,
+                  18
+               ],
+               "leading_comments": " コメントsyntax\n",
+               "trailing_comments": " コメントsyntax2\n"
+            },
+            {
+               "path": [
+                  2
+               ],
+               "span": [
+                  5,
+                  0,
+                  17
+               ],
+               "leading_comments": " コメントpackage\n",
+               "trailing_comments": " コメントpackage2\n",
+               "leading_detached_comments": [
+                  " コメントsyntax3\n"
+               ]
+            },
+            {
+               "path": [
+                  3,
+                  0
+               ],
+               "span": [
+                  7,
+                  0,
+                  41
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0
+               ],
+               "span": [
+                  10,
+                  0,
+                  14,
+                  1
+               ],
+               "leading_comments": " this is TodoList\n"
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  1
+               ],
+               "span": [
+                  10,
+                  8,
+                  24
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  0
+               ],
+               "span": [
+                  11,
+                  4,
+                  28
+               ],
+               "trailing_comments": " this is tasks\n"
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  0,
+                  4
+               ],
+               "span": [
+                  11,
+                  4,
+                  12
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  0,
+                  6
+               ],
+               "span": [
+                  11,
+                  13,
+                  17
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  0,
+                  1
+               ],
+               "span": [
+                  11,
+                  18,
+                  23
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  0,
+                  3
+               ],
+               "span": [
+                  11,
+                  26,
+                  27
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  1
+               ],
+               "span": [
+                  12,
+                  4,
+                  35
+               ],
+               "trailing_comments": " mapはrepeatedできない\n"
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  1,
+                  6
+               ],
+               "span": [
+                  12,
+                  4,
+                  20
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  1,
+                  1
+               ],
+               "span": [
+                  12,
+                  21,
+                  30
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  1,
+                  3
+               ],
+               "span": [
+                  12,
+                  33,
+                  34
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  2
+               ],
+               "span": [
+                  13,
+                  4,
+                  18
+               ],
+               "trailing_comments": " this is task\n"
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  2,
+                  6
+               ],
+               "span": [
+                  13,
+                  4,
+                  8
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  2,
+                  1
+               ],
+               "span": [
+                  13,
+                  9,
+                  13
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  0,
+                  2,
+                  2,
+                  3
+               ],
+               "span": [
+                  13,
+                  16,
+                  17
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1
+               ],
+               "span": [
+                  16,
+                  0,
+                  20,
+                  1
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  1
+               ],
+               "span": [
+                  16,
+                  8,
+                  12
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  0
+               ],
+               "span": [
+                  17,
+                  4,
+                  18
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  0,
+                  5
+               ],
+               "span": [
+                  17,
+                  4,
+                  10
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  0,
+                  1
+               ],
+               "span": [
+                  17,
+                  11,
+                  13
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  0,
+                  3
+               ],
+               "span": [
+                  17,
+                  16,
+                  17
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  1
+               ],
+               "span": [
+                  18,
+                  4,
+                  20
+               ],
+               "trailing_comments": " task name\n"
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  1,
+                  5
+               ],
+               "span": [
+                  18,
+                  4,
+                  10
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  1,
+                  1
+               ],
+               "span": [
+                  18,
+                  11,
+                  15
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  1,
+                  3
+               ],
+               "span": [
+                  18,
+                  18,
+                  19
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  2
+               ],
+               "span": [
+                  19,
+                  4,
+                  44
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  2,
+                  6
+               ],
+               "span": [
+                  19,
+                  4,
+                  29
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  2,
+                  1
+               ],
+               "span": [
+                  19,
+                  30,
+                  39
+               ]
+            },
+            {
+               "path": [
+                  4,
+                  1,
+                  2,
+                  2,
+                  3
+               ],
+               "span": [
+                  19,
+                  42,
+                  43
+               ]
+            }
+         ]
+      },
+      "syntax": "proto3"
+   },
    "filename": "model.proto",
+   "packageLeadingComments": " コメントpackage\n",
+   "packageTrailingComments": " コメントpackage2\n",
    "protofile": {
       "Dependency": [
          "google/protobuf/timestamp.proto"
@@ -24,11 +564,45 @@
                   "trailingComments": " mapはrepeatedできない\n",
                   "type": 11,
                   "typename": ".pb.model.TodoListResponse.SampleMapEntry"
+               },
+               {
+                  "leadingComments": "",
+                  "leadingDetachedComments": null,
+                  "name": "task",
+                  "repeated": false,
+                  "trailingComments": " this is task\n",
+                  "type": 11,
+                  "typename": ".pb.model.Task"
                }
             ],
-            "leadingComments": "",
+            "leadingComments": " this is TodoList\n",
             "leadingDetachedComments": null,
             "name": "TodoListResponse",
+            "nested_type": [
+               {
+                  "name": "SampleMapEntry",
+                  "field": [
+                     {
+                        "name": "key",
+                        "number": 1,
+                        "label": 1,
+                        "type": 5,
+                        "json_name": "key"
+                     },
+                     {
+                        "name": "value",
+                        "number": 2,
+                        "label": 1,
+                        "type": 11,
+                        "type_name": ".pb.model.Task",
+                        "json_name": "value"
+                     }
+                  ],
+                  "options": {
+                     "map_entry": true
+                  }
+               }
+            ],
             "trailingComments": ""
          },
          {
@@ -64,11 +638,14 @@
             "leadingComments": "",
             "leadingDetachedComments": null,
             "name": "Task",
+            "nested_type": null,
             "trailingComments": ""
          }
       ],
       "name": "model.proto",
       "package": "pb.model",
       "services": []
-   }
+   },
+   "syntaxLeadingComments": " コメントsyntax\n",
+   "syntaxTrailingComments": " コメントsyntax2\n"
 }

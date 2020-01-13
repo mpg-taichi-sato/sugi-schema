@@ -1,4 +1,7 @@
+// コメント1
 syntax = "proto3";
+
+// コメント2
 package model;
 
 message KeyValue {

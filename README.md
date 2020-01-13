@@ -42,3 +42,7 @@ type Task struct {
 
 # HowToUse
 make generate
+
+# parameter
+go
+json

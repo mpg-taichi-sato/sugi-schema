@@ -1,11 +1,17 @@
-syntax = "proto3";
-package pb.model;
+// コメントsyntax
+syntax = "proto3"; // コメントsyntax2
+// コメントsyntax3
+
+// コメントpackage
+package pb.model; // コメントpackage2
 
 import "google/protobuf/timestamp.proto";
 
+// this is TodoList
 message TodoListResponse {
     repeated Task tasks = 1; // this is tasks
-    map<int32, string> sampleMap = 2; // mapはrepeatedできない
+    map<int32, Task> sampleMap = 2; // mapはrepeatedできない
+    Task task = 3; // this is task
 }
 
 message Task {

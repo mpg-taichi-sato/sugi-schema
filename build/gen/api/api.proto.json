@@ -1,5 +1,413 @@
 {
+   "file": {
+      "name": "api/api.proto",
+      "package": "pb.api",
+      "dependency": [
+         "model.proto",
+         "option/http.proto"
+      ],
+      "service": [
+         {
+            "name": "SampleService",
+            "method": [
+               {
+                  "name": "SampleRPC",
+                  "input_type": ".pb.model.Task",
+                  "output_type": ".pb.model.TodoListResponse",
+                  "options": {}
+               },
+               {
+                  "name": "SampleRPC3",
+                  "input_type": ".pb.model.Task",
+                  "output_type": ".pb.model.TodoListResponse",
+                  "options": {}
+               }
+            ]
+         },
+         {
+            "name": "SampleService2",
+            "method": [
+               {
+                  "name": "SampleRPC2",
+                  "input_type": ".pb.model.Task",
+                  "output_type": ".pb.model.TodoListResponse",
+                  "options": {}
+               }
+            ]
+         }
+      ],
+      "source_code_info": {
+         "location": [
+            {
+               "span": [
+                  0,
+                  0,
+                  36,
+                  1
+               ]
+            },
+            {
+               "path": [
+                  12
+               ],
+               "span": [
+                  0,
+                  0,
+                  18
+               ]
+            },
+            {
+               "path": [
+                  2
+               ],
+               "span": [
+                  1,
+                  0,
+                  15
+               ]
+            },
+            {
+               "path": [
+                  3,
+                  0
+               ],
+               "span": [
+                  3,
+                  0,
+                  21
+               ]
+            },
+            {
+               "path": [
+                  3,
+                  1
+               ],
+               "span": [
+                  4,
+                  0,
+                  27
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0
+               ],
+               "span": [
+                  7,
+                  0,
+                  25,
+                  1
+               ],
+               "leading_comments": " Serviceのコメント\n"
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  1
+               ],
+               "span": [
+                  7,
+                  8,
+                  21
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  0
+               ],
+               "span": [
+                  10,
+                  4,
+                  15,
+                  5
+               ],
+               "leading_comments": " サンプルで作った関数\n"
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  0,
+                  1
+               ],
+               "span": [
+                  10,
+                  8,
+                  17
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  0,
+                  2
+               ],
+               "span": [
+                  10,
+                  18,
+                  31
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  0,
+                  3
+               ],
+               "span": [
+                  10,
+                  42,
+                  67
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  0,
+                  4
+               ],
+               "span": [
+                  11,
+                  8,
+                  14,
+                  10
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  0,
+                  4,
+                  50000
+               ],
+               "span": [
+                  11,
+                  8,
+                  14,
+                  10
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  1
+               ],
+               "span": [
+                  18,
+                  4,
+                  23,
+                  5
+               ],
+               "leading_comments": " サンプルで作った関数3\n"
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  1,
+                  1
+               ],
+               "span": [
+                  18,
+                  8,
+                  18
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  1,
+                  2
+               ],
+               "span": [
+                  18,
+                  19,
+                  32
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  1,
+                  3
+               ],
+               "span": [
+                  18,
+                  43,
+                  68
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  1,
+                  4
+               ],
+               "span": [
+                  19,
+                  8,
+                  22,
+                  10
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  0,
+                  2,
+                  1,
+                  4,
+                  50000
+               ],
+               "span": [
+                  19,
+                  8,
+                  22,
+                  10
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  1
+               ],
+               "span": [
+                  27,
+                  0,
+                  36,
+                  1
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  1,
+                  1
+               ],
+               "span": [
+                  27,
+                  8,
+                  22
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  1,
+                  2,
+                  0
+               ],
+               "span": [
+                  29,
+                  4,
+                  34,
+                  5
+               ],
+               "leading_comments": " サンプルで作った関数2222\n"
+            },
+            {
+               "path": [
+                  6,
+                  1,
+                  2,
+                  0,
+                  1
+               ],
+               "span": [
+                  29,
+                  8,
+                  18
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  1,
+                  2,
+                  0,
+                  2
+               ],
+               "span": [
+                  29,
+                  19,
+                  32
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  1,
+                  2,
+                  0,
+                  3
+               ],
+               "span": [
+                  29,
+                  43,
+                  68
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  1,
+                  2,
+                  0,
+                  4
+               ],
+               "span": [
+                  30,
+                  8,
+                  33,
+                  10
+               ]
+            },
+            {
+               "path": [
+                  6,
+                  1,
+                  2,
+                  0,
+                  4,
+                  50000
+               ],
+               "span": [
+                  30,
+                  8,
+                  33,
+                  10
+               ]
+            }
+         ]
+      },
+      "syntax": "proto3"
+   },
    "filename": "api/api.proto",
+   "packageLeadingComments": "",
+   "packageTrailingComments": "",
    "protofile": {
       "Dependency": [
          "model.proto",
@@ -56,5 +464,7 @@
             "trailingComments": ""
          }
       ]
-   }
+   },
+   "syntaxLeadingComments": "",
+   "syntaxTrailingComments": ""
 }
