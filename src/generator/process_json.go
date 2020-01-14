@@ -59,7 +59,7 @@ func (p *GenerateJSONProcess) Run(ctx context.Context, req *plugin.CodeGenerator
 				"messages":   messages,
 				"services":   services,
 			},
-			"file": f,
+			// "file": f,
 			// "sourcecodeinfolocations": protoFileInfo.sourceCodeInfoLocations,
 		}
 		syntaxInfo := protoFileInfo.GetSyntaxInfo()

@@ -1,48 +1,69 @@
-# protobuf-code-generator
-generate .go from .proto
+# What is this?
+protoc-gen-genta is an plugin for protocol buffers.
+this plugin can generate go, json, apidoc and csfields from .proto
 
-WIP csharp
+from model.proto
+```pb/model.proto
+// コメントsyntax
+syntax = "proto3"; // コメントsyntax2
+// コメントsyntax3
 
-
-# sample
-```model.proto
-syntax = "proto3";
-package model;
+// コメントpackage
+package pb.model; // コメントpackage2
 
 import "google/protobuf/timestamp.proto";
 
+// this is TodoList
 message TodoListResponse {
-    repeated Task tasks = 1;
+    repeated Task tasks = 1; // this is tasks
+    map<int32, Task> sampleMap = 2; // mapはrepeatedできない
+    Task task = 3; // this is task
 }
 
 message Task {
     string ID = 1;
-    string Name = 2;
+    string Name = 2; // task name
     google.protobuf.Timestamp CreatedAt = 3;
 }
 ```
 
-```model.pb.go
+to model.pb.go
+```
+// コメントsyntax
+// コメントsyntax2
+// コメントpackage
+// コメントsyntax2
 package model
 
 import (
 	"time"
 )
 
+//TodoListResponse  this is TodoList
 type TodoListResponse struct {
-	tasks []Task
+	tasks     []*Task       // this is tasks
+	sampleMap map[int]*Task // mapはrepeatedできない
+	task      *Task         // this is task
 }
 
 type Task struct {
 	ID        string
-	Name      string
+	Name      string // task name
 	CreatedAt time.Time
 }
 ```
 
-# HowToUse
+# How To Use
 make generate
+please edit pb and Makefile for your project.
 
 # parameter
-go
-json
+go  
+json  
+apidoc  
+csfields  
+
+# extend
+You can extend this package by create generator and process.
+
+
