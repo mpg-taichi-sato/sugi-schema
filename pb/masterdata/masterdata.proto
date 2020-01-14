@@ -8,3 +8,8 @@ message KeyValue {
     string key = 1;
     string value = 2;
 }
+
+message Item {
+    int32 id = 1;
+    string name = 2;
+}

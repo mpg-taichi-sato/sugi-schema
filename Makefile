@@ -1,8 +1,10 @@
 generate:
+	rm -rf build/gen
 	mkdir -p build/gen
 	protoc --proto_path=pb --plugin=src/protoc-gen-genta --genta_out=go,json:build/gen pb/*.proto 
 	protoc --proto_path=pb --plugin=src/protoc-gen-genta --genta_out=json:build/gen pb/api/*.proto
 	protoc --proto_path=pb --plugin=src/protoc-gen-genta --genta_out=apidoc:build/gen pb/*.proto pb/api/*.proto
+	protoc --proto_path=pb --plugin=src/protoc-gen-genta --genta_out=csfields:build/gen pb/masterdata/*.proto
 	go fmt ./build/gen/...
 
 generate-option:

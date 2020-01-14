@@ -1,7 +1,8 @@
 package generator
 
 type Options struct {
-	GenGo     bool
-	GenJSON   bool
-	GenAPIDoc bool
+	GenGo       bool
+	GenJSON     bool
+	GenAPIDoc   bool
+	GenCSFields bool
 }

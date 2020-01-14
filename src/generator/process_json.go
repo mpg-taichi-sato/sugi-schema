@@ -81,13 +81,8 @@ func (p *GenerateJSONProcess) Run(ctx context.Context, req *plugin.CodeGenerator
 			Name:    proto.String(out),
 			Content: proto.String(dataJSON),
 		})
-		// resp.File = append(resp.File, &plugin.CodeGeneratorResponse_File{
-
-		// })
 	}
 	return responseFiles, nil
-	// return &resp, nil
-
 }
 
 func (p *GenerateJSONProcess) GetService(serviceProto *descriptor.ServiceDescriptorProto, serviceIndex int, protoFileInfo *ProtoFileInfo) map[string]interface{} {
