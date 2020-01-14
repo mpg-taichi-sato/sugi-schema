@@ -1,8 +1,11 @@
 # What is this?
-protoc-gen-genta is an plugin for protocol buffers.
+protoc-gen-genta is an plugin for protocol buffers.  
 this plugin can generate go, json, apidoc and csfields from .proto
 
-from model.proto
+like this.
+
+from 
+
 ```pb/model.proto
 // コメントsyntax
 syntax = "proto3"; // コメントsyntax2
@@ -27,8 +30,47 @@ message Task {
 }
 ```
 
-to model.pb.go
+```pb/api/api.proto
+syntax = "proto3";
+package pb.api;
+
+import "model.proto";
+import "option/http.proto";
+import "google/protobuf/empty.proto";
+
+// Serviceのコメント
+service SampleService {
+    
+    // サンプルで作った関数
+    rpc SampleRPC(pb.model.Task) returns (pb.model.TodoListResponse){
+        option (pb.option.http) = {
+            method: "GET"
+            path: "v1/samplerpc"
+        };
+    }
+
+    // Todo list
+    rpc TodoList(google.protobuf.Empty) returns (pb.model.TodoListResponse){
+        option (pb.option.http) = {
+            method: "GET"
+            path: "v1/todolist"
+        };
+    }
+}
+
+service SampleService2 {
+    // サンプルで作った関数2222
+    rpc SampleRPC2(pb.model.Task) returns (pb.model.TodoListResponse){
+        option (pb.option.http) = {
+            method: "GET"
+            path: "v1/samplerpc2"
+        };
+    }
+}
 ```
+
+to
+```build/gen/model.go
 // コメントsyntax
 // コメントsyntax2
 // コメントpackage
@@ -51,6 +93,46 @@ type Task struct {
 	Name      string // task name
 	CreatedAt time.Time
 }
+```
+
+```build/gen/api/api.md
+# GET v1/samplerpc
+ サンプルで作った関数
+##### Parameters  
+|Parameter|Description|Data Type|
+|:--|:--|:--|
+|ID||string|
+|Name| task name |string|
+|CreatedAt||time.Time|
+##### Response  
+|Parameter|Description|Data Type|
+|:--|:--|:--|
+|tasks| this is tasks |[]*Task|
+|sampleMap| mapはrepeatedできない |map[int]*Task|
+|task| this is task |*Task|
+# GET v1/todolist
+ Todo list
+##### Response  
+|Parameter|Description|Data Type|
+|:--|:--|:--|
+|tasks| this is tasks |[]*Task|
+|sampleMap| mapはrepeatedできない |map[int]*Task|
+|task| this is task |*Task|
+# GET v1/samplerpc2
+ サンプルで作った関数2222
+##### Parameters  
+|Parameter|Description|Data Type|
+|:--|:--|:--|
+|ID||string|
+|Name| task name |string|
+|CreatedAt||time.Time|
+##### Response  
+|Parameter|Description|Data Type|
+|:--|:--|:--|
+|tasks| this is tasks |[]*Task|
+|sampleMap| mapはrepeatedできない |map[int]*Task|
+|task| this is task |*Task|
+
 ```
 
 # How To Use
