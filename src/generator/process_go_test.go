@@ -18,9 +18,6 @@ func TestGenerateGoProcess_GetGoStruct(t *testing.T) {
 	strPointer := func(v string) *string {
 		return &v
 	}
-	// int32Pointer := func(v int32) *int32 {
-	// 	return &v
-	// }
 
 	boolPointer := func(v bool) *bool {
 		return &v
