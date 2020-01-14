@@ -136,7 +136,8 @@ type Task struct {
 ```
 
 # How To Use
-make generate
+`make generate`  
+
 please edit pb and Makefile for your project.
 
 # parameter
