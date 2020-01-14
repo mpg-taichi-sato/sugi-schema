@@ -4,7 +4,8 @@
       "package": "pb.api",
       "dependency": [
          "model.proto",
-         "option/http.proto"
+         "option/http.proto",
+         "google/protobuf/empty.proto"
       ],
       "service": [
          {
@@ -17,8 +18,8 @@
                   "options": {}
                },
                {
-                  "name": "SampleRPC3",
-                  "input_type": ".pb.model.Task",
+                  "name": "TodoList",
+                  "input_type": ".google.protobuf.Empty",
                   "output_type": ".pb.model.TodoListResponse",
                   "options": {}
                }
@@ -90,11 +91,22 @@
             },
             {
                "path": [
+                  3,
+                  2
+               ],
+               "span": [
+                  5,
+                  0,
+                  37
+               ]
+            },
+            {
+               "path": [
                   6,
                   0
                ],
                "span": [
-                  7,
+                  8,
                   0,
                   25,
                   1
@@ -108,7 +120,7 @@
                   1
                ],
                "span": [
-                  7,
+                  8,
                   8,
                   21
                ]
@@ -121,9 +133,9 @@
                   0
                ],
                "span": [
-                  10,
+                  11,
                   4,
-                  15,
+                  16,
                   5
                ],
                "leading_comments": " サンプルで作った関数\n"
@@ -137,7 +149,7 @@
                   1
                ],
                "span": [
-                  10,
+                  11,
                   8,
                   17
                ]
@@ -151,7 +163,7 @@
                   2
                ],
                "span": [
-                  10,
+                  11,
                   18,
                   31
                ]
@@ -165,7 +177,7 @@
                   3
                ],
                "span": [
-                  10,
+                  11,
                   42,
                   67
                ]
@@ -179,9 +191,9 @@
                   4
                ],
                "span": [
-                  11,
+                  12,
                   8,
-                  14,
+                  15,
                   10
                ]
             },
@@ -195,9 +207,9 @@
                   50000
                ],
                "span": [
-                  11,
+                  12,
                   8,
-                  14,
+                  15,
                   10
                ]
             },
@@ -209,12 +221,12 @@
                   1
                ],
                "span": [
-                  18,
+                  19,
                   4,
-                  23,
+                  24,
                   5
                ],
-               "leading_comments": " サンプルで作った関数3\n"
+               "leading_comments": " Todo list\n"
             },
             {
                "path": [
@@ -225,9 +237,9 @@
                   1
                ],
                "span": [
-                  18,
+                  19,
                   8,
-                  18
+                  16
                ]
             },
             {
@@ -239,9 +251,9 @@
                   2
                ],
                "span": [
-                  18,
                   19,
-                  32
+                  17,
+                  38
                ]
             },
             {
@@ -253,9 +265,9 @@
                   3
                ],
                "span": [
-                  18,
-                  43,
-                  68
+                  19,
+                  49,
+                  74
                ]
             },
             {
@@ -267,9 +279,9 @@
                   4
                ],
                "span": [
-                  19,
+                  20,
                   8,
-                  22,
+                  23,
                   10
                ]
             },
@@ -283,9 +295,9 @@
                   50000
                ],
                "span": [
-                  19,
+                  20,
                   8,
-                  22,
+                  23,
                   10
                ]
             },
@@ -411,7 +423,8 @@
    "protofile": {
       "Dependency": [
          "model.proto",
-         "option/http.proto"
+         "option/http.proto",
+         "google/protobuf/empty.proto"
       ],
       "messages": [],
       "name": "api/api.proto",
@@ -432,13 +445,13 @@
                   "trailingComments": ""
                },
                {
-                  "InputType": ".pb.model.Task",
+                  "InputType": ".google.protobuf.Empty",
                   "OutputType": ".pb.model.TodoListResponse",
-                  "leadingComments": " サンプルで作った関数3\n",
+                  "leadingComments": " Todo list\n",
                   "leadingDetachedComments": null,
                   "method": "GET",
-                  "name": "SampleRPC3",
-                  "path": "v1/samplerpc3",
+                  "name": "TodoList",
+                  "path": "v1/todolist",
                   "trailingComments": ""
                }
             ],

@@ -38,6 +38,8 @@ func parseRequestParameter(parameter string) *generator.Options {
 				options.GenGo = true
 			case "json":
 				options.GenJSON = true
+			case "apidoc":
+				options.GenAPIDoc = true
 			}
 			continue
 		}
@@ -81,6 +83,10 @@ func run() error {
 
 	if options.GenJSON {
 		processes = append(processes, &generator.GenerateJSONProcess{})
+	}
+
+	if options.GenAPIDoc {
+		processes = append(processes, &generator.GenerateAPIDocProcess{})
 	}
 
 	if len(processes) == 0 {

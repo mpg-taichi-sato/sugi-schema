@@ -14,6 +14,7 @@ import (
 	// "github.com/golang/protobuf/proto"
 
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -30,10 +31,18 @@ func (p *GenerateGoProcess) Run(ctx context.Context, req *plugin.CodeGeneratorRe
 
 	g := &GoCodeGenerator{}
 
+	protoTypeInfo := CreateProtoTypeInfo(&GoTypeConverter{})
+
 	files := make(map[string]*descriptor.FileDescriptorProto, len(req.ProtoFile))
-	for _, f := range req.ProtoFile {
-		files[f.GetName()] = f
+	for i := 0; i < len(req.ProtoFile); i++ {
+		f := req.ProtoFile[i]
+		files[f.GetName()] = req.ProtoFile[i]
+		err := protoTypeInfo.UpdateTypeMapByFileProto(f, i)
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	responseFiles := make([]*plugin.CodeGeneratorResponse_File, 0, len(req.FileToGenerate))
 	for _, fname := range req.FileToGenerate {
 		f := files[fname]
@@ -46,7 +55,7 @@ func (p *GenerateGoProcess) Run(ctx context.Context, req *plugin.CodeGeneratorRe
 		messageProtos := f.GetMessageType()
 		structs := make([]*GoStruct, 0, len(messageProtos))
 		for i := 0; i < len(messageProtos); i++ {
-			st, err := p.GetGoStruct(messageProtos[i], i, protoFileInfo, f.GetPackage())
+			st, err := p.GetGoStruct(messageProtos[i], i, protoFileInfo, protoTypeInfo)
 			if err != nil {
 				return nil, err
 			}
@@ -85,53 +94,65 @@ func (p *GenerateGoProcess) GoPackageComment(protoFileInfo *ProtoFileInfo) strin
 	return sb.String()
 }
 
-func (p *GenerateGoProcess) GetGoStruct(messageProto *descriptor.DescriptorProto, messageIndex int, protoFileInfo *ProtoFileInfo, path string) (*GoStruct, error) {
-	// nested type
-	nestedType := messageProto.GetNestedType()
-	// mapEntry: typeName
-	mapTypeNames := make(map[string]string, 0)
-	if nestedType != nil {
-		for _, nestedMessageProto := range nestedType {
-			nestedMessageOptions := nestedMessageProto.GetOptions()
-			if nestedMessageOptions == nil {
-				continue
-			}
-			// is this message map
-			if nestedMessageOptions.GetMapEntry() {
-				mapEntryFieldProtos := nestedMessageProto.GetField()
-				keyTypeName := ""
-				valueTypeName := ""
-				for _, field := range mapEntryFieldProtos {
-					fieldName := field.GetName()
-					if fieldName == "key" {
-						name, err := p.GetGoTypeName(field.GetType(), field.GetTypeName())
-						if err != nil {
-							return nil, err
-						}
-						keyTypeName = name
-					}
+func (p *GenerateGoProcess) GetGoStruct(messageProto *descriptor.DescriptorProto, messageIndex int, protoFileInfo *ProtoFileInfo, protoTypeInfo *ProtoTypeInfo) (*GoStruct, error) {
+	// // nested type
+	// nestedType := messageProto.GetNestedType()
+	// // mapEntry: typeName
+	// mapTypeNames := make(map[string]string, 0)
+	// if nestedType != nil {
+	// 	for _, nestedMessageProto := range nestedType {
+	// 		nestedMessageOptions := nestedMessageProto.GetOptions()
+	// 		if nestedMessageOptions == nil {
+	// 			continue
+	// 		}
+	// 		// is this message map
+	// 		if nestedMessageOptions.GetMapEntry() {
+	// 			mapEntryFieldProtos := nestedMessageProto.GetField()
+	// 			keyTypeName := ""
+	// 			valueTypeName := ""
+	// 			for _, field := range mapEntryFieldProtos {
+	// 				fieldName := field.GetName()
+	// 				if fieldName == "key" {
+	// 					name, err := p.GetGoTypeName(field.GetType(), field.GetTypeName())
+	// 					if err != nil {
+	// 						return nil, err
+	// 					}
+	// 					keyTypeName = name
+	// 				}
 
-					if fieldName == "value" {
-						name, err := p.GetGoTypeName(field.GetType(), field.GetTypeName())
-						if err != nil {
-							return nil, err
-						}
-						valueTypeName = name
-					}
-				}
-				fullName := fmt.Sprintf(".%v.%v.%v", path, messageProto.GetName(), nestedMessageProto.GetName())
-				mapTypeNames[fullName] = fmt.Sprintf("map[%s]%s", keyTypeName, valueTypeName)
-			}
+	// 				if fieldName == "value" {
+	// 					name, err := p.GetGoTypeName(field.GetType(), field.GetTypeName())
+	// 					if err != nil {
+	// 						return nil, err
+	// 					}
+	// 					valueTypeName = name
+	// 				}
+	// 			}
+	// 			fullName := fmt.Sprintf(".%v.%v.%v", path, messageProto.GetName(), nestedMessageProto.GetName())
+	// 			mapTypeNames[fullName] = fmt.Sprintf("map[%s]%s", keyTypeName, valueTypeName)
+	// 		}
 
-		}
-	}
+	// 	}
+	// }
 
 	messageInfo := protoFileInfo.GetMessageInfo(int32(messageIndex))
 	fieldProtos := messageProto.GetField()
 	fields := make([]*GoStructField, 0, len(fieldProtos))
 	for i := 0; i < len(fieldProtos); i++ {
+		fieldProto := fieldProtos[i]
 		fieldInfo := protoFileInfo.GetMessageFieldInfo(int32(messageIndex), int32(i))
-		fields = append(fields, p.GetGoStructField(fieldProtos[i], fieldInfo, mapTypeNames))
+		// fields = append(fields, p.GetGoStructField(fieldProtos[i], fieldInfo, mapTypeNames))
+
+		dataType, err := protoTypeInfo.GetTypeName(fieldProto)
+		if err != nil {
+			return nil, err
+		}
+
+		fields = append(fields, &GoStructField{
+			Name:    fieldProto.GetName(),
+			Type:    &GoType{Name: dataType},
+			Comment: fieldInfo.GetTrailingComments(),
+		})
 	}
 	st := &GoStruct{
 		Name:    messageProto.GetName(),
@@ -142,45 +163,85 @@ func (p *GenerateGoProcess) GetGoStruct(messageProto *descriptor.DescriptorProto
 	return st, nil
 }
 
-func (p *GenerateGoProcess) GetGoStructField(fieldProto *descriptor.FieldDescriptorProto, info *descriptor.SourceCodeInfo_Location, typeNameMap map[string]string) *GoStructField {
+// func (p *GenerateGoProcess) GetGoStructField(fieldProto *descriptor.FieldDescriptorProto, info *descriptor.SourceCodeInfo_Location, typeNameMap map[string]string) *GoStructField {
 
-	label := fieldProto.GetLabel()
+// 	label := fieldProto.GetLabel()
 
-	typ, err := p.GetGoType(fieldProto.GetType(), fieldProto.GetTypeName(), label, typeNameMap)
-	if err != nil {
-		panic(err)
-	}
+// 	typ, err := p.GetGoType(fieldProto.GetType(), fieldProto.GetTypeName(), label, typeNameMap)
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	field := &GoStructField{
-		Name:    fieldProto.GetName(),
-		Type:    typ,
-		Comment: info.GetTrailingComments(),
-	}
+// 	field := &GoStructField{
+// 		Name:    fieldProto.GetName(),
+// 		Type:    typ,
+// 		Comment: info.GetTrailingComments(),
+// 	}
 
-	return field
+// 	return field
+// }
+
+// func (p *GenerateGoProcess) GetGoType(typeProto descriptor.FieldDescriptorProto_Type, typeName string, label descriptor.FieldDescriptorProto_Label, typeNameMap map[string]string) (*GoType, error) {
+
+// 	if typeNameMap != nil {
+// 		convertedTypeName, found := typeNameMap[typeName]
+// 		if found {
+// 			return &GoType{Name: convertedTypeName}, nil
+// 		}
+// 	}
+
+// 	goTypeName, err := p.GetGoTypeName(typeProto, typeName)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	if label == descriptor.FieldDescriptorProto_LABEL_REPEATED {
+// 		goTypeName = "[]" + goTypeName
+// 	}
+// 	return &GoType{Name: goTypeName}, nil
+// }
+
+// func (p *GenerateGoProcess) GetGoTypeName(typeProto descriptor.FieldDescriptorProto_Type, typeName string) (string, error) {
+// 	goTypeName := ""
+// 	switch typeProto {
+// 	case descriptor.FieldDescriptorProto_TYPE_INT32:
+// 		goTypeName = "int"
+// 	case descriptor.FieldDescriptorProto_TYPE_INT64:
+// 		goTypeName = "int64"
+// 	case descriptor.FieldDescriptorProto_TYPE_BOOL:
+// 		goTypeName = "bool"
+// 	case descriptor.FieldDescriptorProto_TYPE_STRING:
+// 		goTypeName = "string"
+// 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+// 		goTypeName = p.GetGoStructTypeName(typeName)
+// 	default:
+// 		return "", fmt.Errorf("GetGoType unsupported type error %v", typeProto)
+// 	}
+// 	return goTypeName, nil
+// }
+
+// func (p *GenerateGoProcess) GetGoStructTypeName(typeName string) string {
+// 	if typeName == ".google.protobuf.Timestamp" {
+// 		return "time.Time"
+// 	}
+
+// 	typeSlice := strings.Split(typeName, ".")
+// 	// always pointer
+// 	return "*" + typeSlice[len(typeSlice)-1]
+// }
+
+type GoTypeConverter struct {
 }
 
-func (p *GenerateGoProcess) GetGoType(typeProto descriptor.FieldDescriptorProto_Type, typeName string, label descriptor.FieldDescriptorProto_Label, typeNameMap map[string]string) (*GoType, error) {
-
-	if typeNameMap != nil {
-		convertedTypeName, found := typeNameMap[typeName]
-		if found {
-			return &GoType{Name: convertedTypeName}, nil
-		}
-	}
-
-	goTypeName, err := p.GetGoTypeName(typeProto, typeName)
-	if err != nil {
-		return nil, err
-	}
-
-	if label == descriptor.FieldDescriptorProto_LABEL_REPEATED {
-		goTypeName = "[]" + goTypeName
-	}
-	return &GoType{Name: goTypeName}, nil
+func (c *GoTypeConverter) FormatMapType(key, value string) string {
+	return fmt.Sprintf("map[%s]%s", key, value)
 }
 
-func (p *GenerateGoProcess) GetGoTypeName(typeProto descriptor.FieldDescriptorProto_Type, typeName string) (string, error) {
+func (c *GoTypeConverter) FormatArrayType(srcType string) string {
+	return "[]" + srcType
+}
+
+func (c *GoTypeConverter) GetScalarTypeName(typeProto descriptor.FieldDescriptorProto_Type) (string, error) {
 	goTypeName := ""
 	switch typeProto {
 	case descriptor.FieldDescriptorProto_TYPE_INT32:
@@ -192,19 +253,19 @@ func (p *GenerateGoProcess) GetGoTypeName(typeProto descriptor.FieldDescriptorPr
 	case descriptor.FieldDescriptorProto_TYPE_STRING:
 		goTypeName = "string"
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-		goTypeName = p.GetGoStructTypeName(typeName)
+		return "", errors.New("not scalar")
 	default:
 		return "", fmt.Errorf("GetGoType unsupported type error %v", typeProto)
 	}
 	return goTypeName, nil
 }
 
-func (p *GenerateGoProcess) GetGoStructTypeName(typeName string) string {
-	if typeName == ".google.protobuf.Timestamp" {
+func (c *GoTypeConverter) GetMessageTypeName(protoTypeName string) string {
+	if protoTypeName == ".google.protobuf.Timestamp" {
 		return "time.Time"
 	}
-	// キャッシュで高速化できる
-	typeSlice := strings.Split(typeName, ".")
+
+	typeSlice := strings.Split(protoTypeName, ".")
 	// always pointer
 	return "*" + typeSlice[len(typeSlice)-1]
 }

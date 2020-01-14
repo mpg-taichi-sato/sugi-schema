@@ -28,8 +28,8 @@ type GenerateJSONProcess struct {
 func (p *GenerateJSONProcess) Run(ctx context.Context, req *plugin.CodeGeneratorRequest) ([]*plugin.CodeGeneratorResponse_File, error) {
 
 	fileProtos := make(map[string]*descriptor.FileDescriptorProto, len(req.ProtoFile))
-	for _, f := range req.ProtoFile {
-		fileProtos[f.GetName()] = f
+	for i, f := range req.ProtoFile {
+		fileProtos[f.GetName()] = req.ProtoFile[i]
 	}
 
 	responseFiles := make([]*plugin.CodeGeneratorResponse_File, 0, len(req.FileToGenerate))
