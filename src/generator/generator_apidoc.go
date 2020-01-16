@@ -9,7 +9,7 @@ import (
 type APIDocInfo struct {
 	HeadComment string
 	Services    []*APIDocService
-	// SubStructs  map[string]*APIDocStructModel
+	SubStructs  []*APIDocStructModel
 }
 
 type APIDocService struct {
@@ -60,6 +60,23 @@ func (g *APIDocGenerator) Generate(ctx context.Context, docInfo *APIDocInfo) str
 				parameter := service.Response.Fields[j]
 				sb.WriteString(fmt.Sprintf("|%s|%s|%s|\n", parameter.Name, parameter.Description, parameter.DataType))
 			}
+		}
+	}
+
+	if len(docInfo.SubStructs) > 0 {
+		sb.WriteString("\n\n")
+		sb.WriteString("# SubStructs\n")
+	}
+
+	for i := 0; i < len(docInfo.SubStructs); i++ {
+		s := docInfo.SubStructs[i]
+		sb.WriteString(fmt.Sprintf("#### %s\n", s.Name))
+		sb.WriteString(s.Comment)
+		sb.WriteString("|Parameter|Description|Data Type|\n")
+		sb.WriteString("|:--|:--|:--|\n")
+		for j := 0; j < len(s.Fields); j++ {
+			parameter := s.Fields[j]
+			sb.WriteString(fmt.Sprintf("|%s|%s|%s|\n", parameter.Name, parameter.Description, parameter.DataType))
 		}
 	}
 

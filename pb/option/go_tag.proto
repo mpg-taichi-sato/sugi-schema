@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package pb.option;
+option go_package = "option";
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.FieldOptions {
+    string go_tag = 50001;
+}

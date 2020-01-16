@@ -36,6 +36,8 @@ func parseRequestParameter(parameter string) *generator.Options {
 			switch spec[0] {
 			case "go":
 				options.GenGo = true
+			case "go_tag_json":
+				options.GoTagJSON = true
 			case "json":
 				options.GenJSON = true
 			case "apidoc":
@@ -80,7 +82,9 @@ func run() error {
 
 	var processes []GenerateProcess
 	if options.GenGo {
-		processes = append(processes, &generator.GenerateGoProcess{})
+		processes = append(processes, &generator.GenerateGoProcess{
+			TagJSON: options.GoTagJSON,
+		})
 	}
 
 	if options.GenJSON {

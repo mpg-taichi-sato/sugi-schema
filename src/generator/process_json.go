@@ -143,6 +143,7 @@ func (p *GenerateJSONProcess) GetMessage(messageProto *descriptor.DescriptorProt
 
 func (p *GenerateJSONProcess) GetField(fieldProto *descriptor.FieldDescriptorProto, info *descriptor.SourceCodeInfo_Location) map[string]interface{} {
 	label := fieldProto.GetLabel()
+	tagOption, _ := option.GetGoTagOption(fieldProto.GetOptions())
 	field := map[string]interface{}{
 		"name":                    fieldProto.GetName(),
 		"type":                    fieldProto.GetType(), // 11ならmessage
@@ -151,6 +152,7 @@ func (p *GenerateJSONProcess) GetField(fieldProto *descriptor.FieldDescriptorPro
 		"leadingComments":         info.GetLeadingComments(),
 		"trailingComments":        info.GetTrailingComments(),
 		"leadingDetachedComments": info.GetLeadingDetachedComments(),
+		"go_tag":                  tagOption,
 	}
 
 	return field

@@ -67,9 +67,38 @@ func (p *GenerateAPIDocProcess) Run(ctx context.Context, req *plugin.CodeGenerat
 			sb.WriteString(syntaxInfo.GetTrailingComments())
 		}
 
+		// submessage
+		messageProtos := f.GetMessageType()
+		subMessages := make([]*APIDocStructModel, 0)
+		for i := 0; i < len(messageProtos); i++ {
+			messageProto := messageProtos[i]
+			isSub := true
+			for _, s := range services {
+				if s.Request != nil && s.Request.Name == messageProto.GetName() {
+					isSub = false
+					break
+				}
+
+				if s.Response != nil && s.Response.Name == messageProto.GetName() {
+					isSub = false
+					break
+				}
+			}
+			if !isSub {
+				continue
+			}
+
+			sm, err := p.GetAPIDocStructModel(messageProto, i, protoFileInfo, protoTypeInfo)
+			if err != nil {
+				return nil, err
+			}
+			subMessages = append(subMessages, sm)
+		}
+
 		apiDocInfo := &APIDocInfo{
 			HeadComment: sb.String(),
 			Services:    services,
+			SubStructs:  subMessages,
 		}
 
 		content := g.Generate(ctx, apiDocInfo)

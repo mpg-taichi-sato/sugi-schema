@@ -1,422 +1,4 @@
 {
-   "file": {
-      "name": "api/api.proto",
-      "package": "pb.api",
-      "dependency": [
-         "model.proto",
-         "option/http.proto",
-         "google/protobuf/empty.proto"
-      ],
-      "service": [
-         {
-            "name": "SampleService",
-            "method": [
-               {
-                  "name": "SampleRPC",
-                  "input_type": ".pb.model.Task",
-                  "output_type": ".pb.model.TodoListResponse",
-                  "options": {}
-               },
-               {
-                  "name": "TodoList",
-                  "input_type": ".google.protobuf.Empty",
-                  "output_type": ".pb.model.TodoListResponse",
-                  "options": {}
-               }
-            ]
-         },
-         {
-            "name": "SampleService2",
-            "method": [
-               {
-                  "name": "SampleRPC2",
-                  "input_type": ".pb.model.Task",
-                  "output_type": ".pb.model.TodoListResponse",
-                  "options": {}
-               }
-            ]
-         }
-      ],
-      "source_code_info": {
-         "location": [
-            {
-               "span": [
-                  0,
-                  0,
-                  36,
-                  1
-               ]
-            },
-            {
-               "path": [
-                  12
-               ],
-               "span": [
-                  0,
-                  0,
-                  18
-               ]
-            },
-            {
-               "path": [
-                  2
-               ],
-               "span": [
-                  1,
-                  0,
-                  15
-               ]
-            },
-            {
-               "path": [
-                  3,
-                  0
-               ],
-               "span": [
-                  3,
-                  0,
-                  21
-               ]
-            },
-            {
-               "path": [
-                  3,
-                  1
-               ],
-               "span": [
-                  4,
-                  0,
-                  27
-               ]
-            },
-            {
-               "path": [
-                  3,
-                  2
-               ],
-               "span": [
-                  5,
-                  0,
-                  37
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0
-               ],
-               "span": [
-                  8,
-                  0,
-                  25,
-                  1
-               ],
-               "leading_comments": " Serviceのコメント\n"
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  1
-               ],
-               "span": [
-                  8,
-                  8,
-                  21
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  0
-               ],
-               "span": [
-                  11,
-                  4,
-                  16,
-                  5
-               ],
-               "leading_comments": " サンプルで作った関数\n"
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  0,
-                  1
-               ],
-               "span": [
-                  11,
-                  8,
-                  17
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  0,
-                  2
-               ],
-               "span": [
-                  11,
-                  18,
-                  31
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  0,
-                  3
-               ],
-               "span": [
-                  11,
-                  42,
-                  67
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  0,
-                  4
-               ],
-               "span": [
-                  12,
-                  8,
-                  15,
-                  10
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  0,
-                  4,
-                  50000
-               ],
-               "span": [
-                  12,
-                  8,
-                  15,
-                  10
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  1
-               ],
-               "span": [
-                  19,
-                  4,
-                  24,
-                  5
-               ],
-               "leading_comments": " Todo list\n"
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  1,
-                  1
-               ],
-               "span": [
-                  19,
-                  8,
-                  16
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  1,
-                  2
-               ],
-               "span": [
-                  19,
-                  17,
-                  38
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  1,
-                  3
-               ],
-               "span": [
-                  19,
-                  49,
-                  74
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  1,
-                  4
-               ],
-               "span": [
-                  20,
-                  8,
-                  23,
-                  10
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  0,
-                  2,
-                  1,
-                  4,
-                  50000
-               ],
-               "span": [
-                  20,
-                  8,
-                  23,
-                  10
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  1
-               ],
-               "span": [
-                  27,
-                  0,
-                  36,
-                  1
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  1,
-                  1
-               ],
-               "span": [
-                  27,
-                  8,
-                  22
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  1,
-                  2,
-                  0
-               ],
-               "span": [
-                  29,
-                  4,
-                  34,
-                  5
-               ],
-               "leading_comments": " サンプルで作った関数2222\n"
-            },
-            {
-               "path": [
-                  6,
-                  1,
-                  2,
-                  0,
-                  1
-               ],
-               "span": [
-                  29,
-                  8,
-                  18
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  1,
-                  2,
-                  0,
-                  2
-               ],
-               "span": [
-                  29,
-                  19,
-                  32
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  1,
-                  2,
-                  0,
-                  3
-               ],
-               "span": [
-                  29,
-                  43,
-                  68
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  1,
-                  2,
-                  0,
-                  4
-               ],
-               "span": [
-                  30,
-                  8,
-                  33,
-                  10
-               ]
-            },
-            {
-               "path": [
-                  6,
-                  1,
-                  2,
-                  0,
-                  4,
-                  50000
-               ],
-               "span": [
-                  30,
-                  8,
-                  33,
-                  10
-               ]
-            }
-         ]
-      },
-      "syntax": "proto3"
-   },
    "filename": "api/api.proto",
    "packageLeadingComments": "",
    "packageTrailingComments": "",
@@ -426,7 +8,46 @@
          "option/http.proto",
          "google/protobuf/empty.proto"
       ],
-      "messages": [],
+      "messages": [
+         {
+            "fields": [
+               {
+                  "go_tag": "",
+                  "leadingComments": "",
+                  "leadingDetachedComments": null,
+                  "name": "param",
+                  "repeated": false,
+                  "trailingComments": "",
+                  "type": 11,
+                  "typename": ".pb.api.SampleSub"
+               }
+            ],
+            "leadingComments": "",
+            "leadingDetachedComments": null,
+            "name": "SampleResponse",
+            "nested_type": null,
+            "trailingComments": ""
+         },
+         {
+            "fields": [
+               {
+                  "go_tag": "",
+                  "leadingComments": "",
+                  "leadingDetachedComments": null,
+                  "name": "num",
+                  "repeated": false,
+                  "trailingComments": "",
+                  "type": 5,
+                  "typename": ""
+               }
+            ],
+            "leadingComments": "",
+            "leadingDetachedComments": null,
+            "name": "SampleSub",
+            "nested_type": null,
+            "trailingComments": ""
+         }
+      ],
       "name": "api/api.proto",
       "package": "pb.api",
       "services": [
@@ -436,7 +57,7 @@
             "method": [
                {
                   "InputType": ".pb.model.Task",
-                  "OutputType": ".pb.model.TodoListResponse",
+                  "OutputType": ".pb.api.SampleResponse",
                   "leadingComments": " サンプルで作った関数\n",
                   "leadingDetachedComments": null,
                   "method": "GET",
@@ -456,24 +77,6 @@
                }
             ],
             "name": "SampleService",
-            "trailingComments": ""
-         },
-         {
-            "leadingComments": "",
-            "leadingDetachedComments": null,
-            "method": [
-               {
-                  "InputType": ".pb.model.Task",
-                  "OutputType": ".pb.model.TodoListResponse",
-                  "leadingComments": " サンプルで作った関数2222\n",
-                  "leadingDetachedComments": null,
-                  "method": "GET",
-                  "name": "SampleRPC2",
-                  "path": "v1/samplerpc2",
-                  "trailingComments": ""
-               }
-            ],
-            "name": "SampleService2",
             "trailingComments": ""
          }
       ]

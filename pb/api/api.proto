@@ -9,7 +9,7 @@ import "google/protobuf/empty.proto";
 service SampleService {
     
     // サンプルで作った関数
-    rpc SampleRPC(pb.model.Task) returns (pb.model.TodoListResponse){
+    rpc SampleRPC(pb.model.Task) returns (SampleResponse){
         option (pb.option.http) = {
             method: "GET"
             path: "v1/samplerpc"
@@ -25,13 +25,10 @@ service SampleService {
     }
 }
 
-service SampleService2 {
-    // サンプルで作った関数2222
-    rpc SampleRPC2(pb.model.Task) returns (pb.model.TodoListResponse){
-        option (pb.option.http) = {
-            method: "GET"
-            path: "v1/samplerpc2"
-        };
-    }
-    // rpc SampleRPC(pb.model.Task) returns (pb.option.Http);
+message SampleResponse {
+    SampleSub param = 1;
+}
+
+message SampleSub {
+    int32 num = 1;  
 }

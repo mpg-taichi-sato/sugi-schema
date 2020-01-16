@@ -16,6 +16,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"protoc-gen-genta/option"
 	"strings"
 
 	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
@@ -25,6 +26,7 @@ import (
 )
 
 type GenerateGoProcess struct {
+	TagJSON bool
 }
 
 func (p *GenerateGoProcess) Run(ctx context.Context, req *plugin.CodeGeneratorRequest) ([]*plugin.CodeGeneratorResponse_File, error) {
@@ -109,10 +111,16 @@ func (p *GenerateGoProcess) GetGoStruct(messageProto *descriptor.DescriptorProto
 			return nil, err
 		}
 
+		tagOption, found := option.GetGoTagOption(fieldProto.GetOptions())
+		if !found && p.TagJSON {
+			tagOption = fmt.Sprintf("json:\"%s\"", fieldProto.GetName())
+		}
+
 		fields = append(fields, &GoStructField{
 			Name:    fieldProto.GetName(),
 			Type:    &GoType{Name: dataType},
 			Comment: fieldInfo.GetTrailingComments(),
+			Tag:     tagOption,
 		})
 	}
 	st := &GoStruct{

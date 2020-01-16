@@ -59,7 +59,8 @@ please edit pb and Makefile for your project.
 
 # parameter
 go  
-json  
+go_tag_json  
+json
 apidoc  
 csfields  
 

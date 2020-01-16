@@ -1,0 +1,75 @@
+{
+   "filename": "masterdata/masterdata.proto",
+   "packageLeadingComments": " コメント2\n",
+   "packageTrailingComments": "",
+   "protofile": {
+      "Dependency": [
+         "option/go_tag.proto"
+      ],
+      "messages": [
+         {
+            "fields": [
+               {
+                  "go_tag": "",
+                  "leadingComments": "",
+                  "leadingDetachedComments": null,
+                  "name": "key",
+                  "repeated": false,
+                  "trailingComments": "",
+                  "type": 9,
+                  "typename": ""
+               },
+               {
+                  "go_tag": "",
+                  "leadingComments": "",
+                  "leadingDetachedComments": null,
+                  "name": "value",
+                  "repeated": false,
+                  "trailingComments": "",
+                  "type": 9,
+                  "typename": ""
+               }
+            ],
+            "leadingComments": "",
+            "leadingDetachedComments": null,
+            "name": "KeyValue",
+            "nested_type": null,
+            "trailingComments": ""
+         },
+         {
+            "fields": [
+               {
+                  "go_tag": "json:\"ID\"",
+                  "leadingComments": "",
+                  "leadingDetachedComments": null,
+                  "name": "id",
+                  "repeated": false,
+                  "trailingComments": "",
+                  "type": 5,
+                  "typename": ""
+               },
+               {
+                  "go_tag": "",
+                  "leadingComments": "",
+                  "leadingDetachedComments": null,
+                  "name": "name",
+                  "repeated": false,
+                  "trailingComments": "",
+                  "type": 9,
+                  "typename": ""
+               }
+            ],
+            "leadingComments": "",
+            "leadingDetachedComments": null,
+            "name": "Item",
+            "nested_type": null,
+            "trailingComments": ""
+         }
+      ],
+      "name": "masterdata/masterdata.proto",
+      "package": "model",
+      "services": []
+   },
+   "syntaxLeadingComments": " コメント1\n",
+   "syntaxTrailingComments": ""
+}

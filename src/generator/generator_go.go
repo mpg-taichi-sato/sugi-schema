@@ -21,6 +21,7 @@ type GoStructField struct {
 	Name    string
 	Type    *GoType
 	Comment string
+	Tag     string
 }
 
 type GoType struct {
@@ -82,6 +83,12 @@ func (g *GoCodeGenerator) Generate(ctx context.Context, f *GoFile) string {
 			sb.WriteString(field.Name)
 			sb.WriteString(" ")
 			sb.WriteString(field.Type.Name)
+
+			if field.Tag != "" {
+				sb.WriteString(" `")
+				sb.WriteString(field.Tag)
+				sb.WriteString("`")
+			}
 
 			if field.Comment != "" {
 				sb.WriteString(" //")

@@ -19,3 +19,21 @@ func GetAPIOption(options *descriptor.MethodOptions) *Http {
 	apiOption := ext.(*Http)
 	return apiOption
 }
+
+func GetGoTagOption(options *descriptor.FieldOptions) (string, bool) {
+	if options == nil {
+		return "", false
+	}
+	ext, err := proto.GetExtension(options, E_GoTag)
+	if err == proto.ErrMissingExtension {
+		return "", false
+	}
+	if err != nil {
+		panic(err)
+	}
+	tag, ok := ext.(*string)
+	if !ok {
+		return "", false
+	}
+	return *tag, true
+}
